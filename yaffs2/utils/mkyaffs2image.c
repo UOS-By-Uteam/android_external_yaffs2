@@ -319,11 +319,11 @@ static int write_object_header(int objId, yaffs_ObjectType t, struct stat *s, in
 	
 }
 
-static void fix_stat(const char *path, struct stat *s)
+static void fix_stat(const char *path, struct stat *s, const char *target_out_path)
 {
     uint64_t capabilities;
     path += source_path_len;
-    fs_config(path, S_ISDIR(s->st_mode), &s->st_uid, &s->st_gid, &s->st_mode, &capabilities);
+    fs_config(path, S_ISDIR(s->st_mode), target_out_path, &s->st_uid, &s->st_gid, &s->st_mode, &capabilities);
 }
 
 static int process_directory(int parent, const char *path, int fixstats)
@@ -348,6 +348,7 @@ static int process_directory(int parent, const char *path, int fixstats)
  			{
  				char full_name[500];
 				char *suffix, dest_name[500];
+				char *target_out_path = NULL;
 				int ret;
 				struct stat stats;
 				int equivalentObj;
@@ -405,7 +406,7 @@ static int process_directory(int parent, const char *path, int fixstats)
 					nObjects++;
 
                     if (fixstats) {
-                        fix_stat(full_name, &stats);
+                        fix_stat(full_name, &stats, target_out_path);
                     }
 
 					//printf("Object %d, %s is a ",newObj,full_name);
@@ -535,6 +536,7 @@ int main(int argc, char *argv[])
 	char *image;
 	char *dir;
 	char *secontext = NULL;
+	char *target_out_path = NULL;
 
 	while ((opt = getopt(argc, argv, "fc:s:")) != -1) {
 		switch (opt) {
@@ -624,7 +626,7 @@ int main(int argc, char *argv[])
             fprintf(stderr,"Fixstats (-f) option requested but filesystem is not data or android!\n");
             exit(1);
         }
-        fix_stat(dir, &stats);
+        fix_stat(dir, &stats, target_out_path);
     }
     
 	//printf("Processing directory %s into image file %s\n",dir,image);
