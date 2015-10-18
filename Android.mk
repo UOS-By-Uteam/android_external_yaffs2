@@ -17,6 +17,7 @@ LOCAL_C_INCLUDES += $(LOCAL_PATH)/yaffs2
 
 LOCAL_MODULE := mkyaffs2image
 
+LOCAL_SHARED_LIBRARIES := libcutils
 LOCAL_STATIC_LIBRARIES := libselinux
 
 include $(BUILD_HOST_EXECUTABLE)
