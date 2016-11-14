@@ -620,6 +620,8 @@ int main(int argc, char *argv[])
         
         if((len >= 4) && (!strcmp(dir + len - 4, "data"))) {
             source_path_len = len - 4;
+        } else if((len >= 5) && (!strcmp(dir + len - 5, "cache"))) {
+            source_path_len = len - 5;
         } else if((len >= 6) && (!strcmp(dir + len - 6, "system"))) {
             source_path_len = len - 6;
         } else {            
